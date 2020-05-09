@@ -74,6 +74,10 @@ Resources:
           FromPort: 22
           IpProtocol: TCP
           ToPort: 22
+        - CidrIp: !Ref VPCCIDR
+          FromPort: 0
+          IpProtocol: TCP
+          ToPort: 65535
       VpcId: !Ref kubeVPC
 
 
@@ -108,6 +112,10 @@ Resources:
           FromPort: 0
           IpProtocol: TCP
           ToPort: 65535
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: TCP
+          ToPort: 22
       VpcId: !Ref kubeVPC
   
   WorkerNode1:

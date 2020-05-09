@@ -1,13 +1,16 @@
 ---
+- hosts: all
+  remote_user: ubuntu
+  become: true 
+  roles:
+    - all-nodes
 - hosts: master
   remote_user: ubuntu
   become: true 
   roles:
-    #- all-nodes
     - master
 - hosts: workers
   remote_user: ubuntu
   become: true 
   roles:
-    #- all-nodes
     - worker

@@ -2,22 +2,29 @@
 # tasks file for master
 
 
-# - name: Initialize the cluster
-#   command: sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+- name: Initialize the cluster
+  command: sudo kubeadm init --pod-network-cidr=10.0.1.0/24
 
-# - name:  Set up local kubeconfig
-#   file:
-#     path: /home/ubuntu/.kube
-#     state: directory
+- name:  Set up local kubeconfig
+  file:
+    path: /home/ubuntu/.kube
+    state: directory
+    mode: '0777'
 
-# - name: Create hard link
-#   file:
-#     src: '/etc/kubernetes/admin.conf'
-#     dest: '/home/ubuntu/.kube/config'
-#     state: hard
+- name: Create hard link
+  file:
+    src: '/etc/kubernetes/admin.conf'
+    dest: '/home/ubuntu/.kube/config'
+    state: hard
+    owner: 1000
+    group: 999  
 
-# - name: Recursively change ownership of a directory
-#   shell: chown $(id -u):$(id -g) $HOME/.kube/config
+- name: export KUBECONFIG
+  shell: export KUBECONFIG=/home/ubuntu/.kube/config
+
+- name: Apply Flannel CNI
+  become: false
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 - name: Generate join command
   command: kubeadm token create --print-join-command

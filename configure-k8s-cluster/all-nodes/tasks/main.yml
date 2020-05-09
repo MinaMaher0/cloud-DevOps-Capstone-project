@@ -34,7 +34,7 @@
     name: "*"
     state: latest
 
-- name: Docker, kubelet, kubeadm, and kubectl
+- name: install Docker, kubelet, kubeadm, and kubectl
   apt:
     name: 
       - docker-ce=18.06.1~ce~3-0~ubuntu
@@ -42,15 +42,6 @@
       - kubeadm=1.15.7-00
       - kubectl=1.15.7-00
     state: present
-
-# - name: Docker, kubelet, kubeadm, and kubectl
-#   systemd:
-#     name: 
-#       - docker-ce=18.06.1~ce~3-0~ubuntu
-#       - kubelet=1.15.7-00
-#       - kubeadm=1.15.7-00
-#       - kubectl=1.15.7-00
-#     enabled: yes
 
 - name: Add the user ubuntu to group docker
   user:

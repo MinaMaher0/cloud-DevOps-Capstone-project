@@ -1,7 +1,7 @@
 
 [master]
-54.208.7.84	 ansible_ssh_private_key_file=~/Downloads/capstone.pem
+54.167.102.191	 ansible_ssh_private_key_file=~/Downloads/capstone.pem
 
 [workers]
-54.242.223.250	ansible_ssh_private_key_file=~/Downloads/capstone.pem
-3.95.22.110 ansible_ssh_private_key_file=~/Downloads/capstone.pem
+54.85.207.238 ansible_ssh_private_key_file=~/Downloads/capstone.pem
+34.207.252.218 ansible_ssh_private_key_file=~/Downloads/capstone.pem
