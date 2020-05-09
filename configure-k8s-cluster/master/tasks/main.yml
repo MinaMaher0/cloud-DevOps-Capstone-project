@@ -1,0 +1,28 @@
+---
+# tasks file for master
+
+
+# - name: Initialize the cluster
+#   command: sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+# - name:  Set up local kubeconfig
+#   file:
+#     path: /home/ubuntu/.kube
+#     state: directory
+
+# - name: Create hard link
+#   file:
+#     src: '/etc/kubernetes/admin.conf'
+#     dest: '/home/ubuntu/.kube/config'
+#     state: hard
+
+# - name: Recursively change ownership of a directory
+#   shell: chown $(id -u):$(id -g) $HOME/.kube/config
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Copy join command to local file
+  become: false
+  local_action: copy content="{{ join_command.stdout_lines[0] }}" dest=./join-command
