@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "VPCCIDR",
+    "ParameterValue": "10.0.0.0/16"
+  },
+  {
+    "ParameterKey": "publicSubnetCIDR",
+    "ParameterValue": "10.0.1.0/24"
+  }
+]
