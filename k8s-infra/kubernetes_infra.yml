@@ -26,7 +26,23 @@ Resources:
           Value: "public subnet"
       VpcId: !Ref kubeVPC
   
+  PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties: 
+        VpcId: !Ref kubeVPC
 
+  PublicSubnetRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: 0.0.0.0/0 
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref PublicRouteTable
+
+  AttachIGWToPublicSubnet:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref publicSubnet
 
 
   IGW:
