@@ -33,8 +33,8 @@ pipeline {
         agent { label 'master' }
         steps{
           sh 'docker login -u $docker_username -p $docker_password'
-          sh 'docker tag todo $docker_username/todo_app'
-          sh 'docker push $docker_username/todo_app'
+          sh 'docker tag todo $docker_username/todo_app:${BUILD_NUMBER}'
+          sh 'docker push $docker_username/todo_app:${BUILD_NUMBER}'
         }
       }      
       stage('deploy'){
