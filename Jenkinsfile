@@ -5,6 +5,7 @@ pipeline {
         docker_password = credentials('docker_password')
     }
     stages {
+      agent { label 'master' }
       stage('Build dokcer image'){
         steps{
           sh 'docker build -t todo .'
@@ -32,10 +33,8 @@ pipeline {
           sh 'docker push $docker_username/todo_app'
         }
       }      
-    }
-    stages{
-      agent { label 'k8s-master' }
       stage('deploy'){
+        agent { label 'k8s-master' }
         steps{
           sh 'kubectl create -f kubernetes/deployment.yml --record --save-config'
         }
