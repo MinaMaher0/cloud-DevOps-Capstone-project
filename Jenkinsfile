@@ -41,9 +41,7 @@ pipeline {
         agent { label 'k8s-master' }
         steps{
           sh 'cat kubernetes/deployment.yml'
-          sh 'export IMAGE_NAME=minamaher0/todo_app:$BUILD_NUMBER'
-          sh 'cat kubernetes/deployment.yml | envsubst > kubernetes/newDeployment.yml'
-          sh 'cat kubernetes/newDeployment.yml'
+          sh 'export IMAGE_NAME=minamaher0/todo_app:$BUILD_NUMBER && cat kubernetes/deployment.yml | envsubst > kubernetes/newDeployment.yml'
           sh 'export KUBECONFIG=/home/ubuntu/.kube/config && kubectl apply -f kubernetes/newDeployment.yml'
         }
       }
