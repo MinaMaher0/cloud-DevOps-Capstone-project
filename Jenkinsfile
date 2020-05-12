@@ -41,6 +41,7 @@ pipeline {
         agent { label 'k8s-master' }
         steps{
           sh 'cat kubernetes/deployment.yml'
+          sh 'echo ${BUILD_NUMBER}'
           sh 'export KUBECONFIG=/home/ubuntu/.kube/config && kubectl apply -f kubernetes/deployment.yml'
         }
       }
