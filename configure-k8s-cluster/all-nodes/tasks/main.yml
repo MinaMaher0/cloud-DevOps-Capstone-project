@@ -1,0 +1,77 @@
+---
+# tasks file for all-nodes
+- name: apt update
+  apt:
+    name: "*"
+    state: latest
+
+- name: Get the Docker gpg key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+
+# make var for bionic
+- name: add docker repo 
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Get the Kubernetes gpg key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+
+- name: add docker repo 
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+
+- name: apt update
+  apt:
+    name: "*"
+    state: latest
+
+- name: install Docker, kubelet, kubeadm, and kubectl
+  apt:
+    name: 
+      - docker-ce=18.06.1~ce~3-0~ubuntu
+      - kubelet=1.15.7-00
+      - kubeadm=1.15.7-00
+      - kubectl=1.15.7-00
+    state: present
+
+- name: Add the user ubuntu to group docker
+  user:
+    name: ubuntu
+    group: docker
+
+- name: hold docker-ce 
+  dpkg_selections:
+    name: docker-ce 
+    selection: hold
+
+- name: hold kubelet
+  dpkg_selections:
+    name: kubelet
+    selection: hold
+
+- name: hold kubeadm
+  dpkg_selections:
+    name: kubeadm
+    selection: hold
+
+- name: hold kubectl
+  dpkg_selections:
+    name: kubectl
+    selection: hold
+
+- name: Add the iptables rule to sysctl.conf
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: net.bridge.bridge-nf-call-iptables=1
+
+- name: Enable iptables immediately
+  command: sysctl -p

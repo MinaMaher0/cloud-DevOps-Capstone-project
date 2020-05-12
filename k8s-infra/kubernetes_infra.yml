@@ -1,0 +1,173 @@
+Parameters:
+  VPCCIDR:
+    Description: "kubernetes VPV CIDR"
+    Type: String
+  publicSubnetCIDR:
+    Description: "public subnet CIDR"
+    Type: String
+
+Resources:
+  kubeVPC:
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: !Ref VPCCIDR
+      Tags: 
+        - Key: Name
+          Value: "Kube VPC"
+
+  publicSubnet: 
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: !Select [0,!GetAZs '']
+      CidrBlock: !Ref publicSubnetCIDR
+      MapPublicIpOnLaunch: true
+      Tags: 
+        - Key: Name
+          Value: "public subnet"
+      VpcId: !Ref kubeVPC
+  
+  PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties: 
+        VpcId: !Ref kubeVPC
+
+  PublicSubnetRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: 0.0.0.0/0 
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref PublicRouteTable
+
+  AttachIGWToPublicSubnet:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref publicSubnet
+
+
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: "Internet Gate Way"
+
+  AttachIGWToVPC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref IGW
+      VpcId: !Ref kubeVPC
+
+  
+
+  masterNodeSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: "master node scurity group"
+      SecurityGroupEgress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 0
+          IpProtocol: TCP
+          ToPort: 65535
+      SecurityGroupIngress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: TCP
+          ToPort: 22
+        - CidrIp: !Ref VPCCIDR
+          FromPort: 0
+          IpProtocol: TCP
+          ToPort: 65535
+      VpcId: !Ref kubeVPC
+
+
+  MasterNode:
+    Type: AWS::EC2::Instance
+    Properties: 
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '15'
+      ImageId: ami-085925f297f89fce1 
+      InstanceType: t2.medium
+      KeyName: capstone
+      SubnetId: !Ref publicSubnet
+      SecurityGroupIds: 
+        - !Ref masterNodeSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: "Master Node"
+  
+  workerNodeSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: "master node scurity group"
+      SecurityGroupEgress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 0
+          IpProtocol: TCP
+          ToPort: 65535
+      SecurityGroupIngress: 
+        - CidrIp: !Ref VPCCIDR
+          FromPort: 0
+          IpProtocol: TCP
+          ToPort: 65535
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: TCP
+          ToPort: 22
+      VpcId: !Ref kubeVPC
+  
+  WorkerNode1:
+    Type: AWS::EC2::Instance
+    Properties: 
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '15'
+      ImageId: ami-085925f297f89fce1 
+      InstanceType: t2.medium
+      KeyName: capstone
+      SubnetId: !Ref publicSubnet
+      SecurityGroupIds: 
+        - !Ref workerNodeSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: "worker Node 1"
+
+  WorkerNode2:
+    Type: AWS::EC2::Instance
+    Properties: 
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '15'
+      ImageId: ami-085925f297f89fce1 
+      InstanceType: t2.medium
+      KeyName: capstone
+      SubnetId: !Ref publicSubnet
+      SecurityGroupIds: 
+        - !Ref workerNodeSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: "worker Node 2"
+
+Outputs:
+  masterNodeIp:
+    Description: master node IP
+    Value: !GetAtt MasterNode.PublicIp
+    Export: 
+      Name: masterNodeIP
+
+  workerNodeIP1:
+    Description: worker node IP
+    Value: !GetAtt WorkerNode1.PublicIp
+    Export: 
+      Name: workerNodeIP1
+
+  workerNodeIP2:
+    Description: worker node IP
+    Value: !GetAtt WorkerNode2.PublicIp
+    Export: 
+      Name: workerNodeIP2
+
