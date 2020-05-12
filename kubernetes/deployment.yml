@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: minamaher0/todo_app:'${BUILD_NUMBER}'
+        image: minamaher0/todo_app:{BUILD_NUMBER}
         readinessProbe:
           httpGet:
             path: /
