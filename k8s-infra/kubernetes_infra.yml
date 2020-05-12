@@ -74,7 +74,7 @@ Resources:
           FromPort: 22
           IpProtocol: TCP
           ToPort: 22
-        - CidrIp: !Ref VPCCIDR
+        - CidrIp: 0.0.0.0/0
           FromPort: 0
           IpProtocol: TCP
           ToPort: 65535
@@ -108,7 +108,7 @@ Resources:
           IpProtocol: TCP
           ToPort: 65535
       SecurityGroupIngress: 
-        - CidrIp: !Ref VPCCIDR
+        - CidrIp: 0.0.0.0/0
           FromPort: 0
           IpProtocol: TCP
           ToPort: 65535
