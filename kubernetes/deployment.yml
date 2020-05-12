@@ -38,5 +38,6 @@ spec:
   type: NodePort
   ports:
   - port: 8080
+    nodePort: 30007
   selector:
     type: vue-app
