@@ -1,7 +1,7 @@
 <template>
   <div class="ToDo">
     <div class="title is-4 has-text-centered">
-      TODOs
+      TODOs version 2
     </div>
     <div class="ToDo__addNew">
       <input
