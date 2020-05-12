@@ -36,4 +36,4 @@ in this project i applied some skills and knowledge
 ## rolling update 
 ![](./images/rolling-update.png)
 
-The process started by increasing the number of replicas of the new ReplicaSet (todo-app-5d8d8bbdb6) to 1. Next, it decreased the number of replicas of the old ReplicaSet (todo-app-79bc68778f) to 2. The same process of increasing replicas of the new, and decreasing replicas of the old ReplicaSet continued until the new one got the desired number (3), and the old one dropped to zero.
+The process started by increasing the number of replicas of the new ReplicaSet (`todo-app-5d8d8bbdb6`) to 1. Next, it decreased the number of replicas of the old ReplicaSet (`todo-app-79bc68778f`) to 2. The same process of increasing replicas of the new, and decreasing replicas of the old ReplicaSet continued until the new one got the desired number (3), and the old one dropped to zero.
