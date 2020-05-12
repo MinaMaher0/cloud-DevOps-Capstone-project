@@ -40,6 +40,7 @@ pipeline {
       stage('deploy'){
         agent { label 'k8s-master' }
         steps{
+          sh 'cat kubernetes/deployment.yml'
           sh 'export KUBECONFIG=/home/ubuntu/.kube/config && kubectl apply -f kubernetes/deployment.yml'
         }
       }
